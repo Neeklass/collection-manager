@@ -1,2 +1,0 @@
-INSERT INTO public.pokemon ("pokemon_name","pokedex_number") VALUES ('{{Input_PokemonName.text}}', CAST({{Input_PokedexNo.text}} AS INTEGER));
--- Use quotes for non-integer values

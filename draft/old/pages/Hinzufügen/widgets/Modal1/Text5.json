@@ -1,0 +1,52 @@
+{
+  "animateLoading": true,
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 65,
+  "dynamicBindingPathList": [
+    {
+      "key": "truncateButtonColor"
+    },
+    {
+      "key": "fontFamily"
+    },
+    {
+      "key": "borderRadius"
+    }
+  ],
+  "dynamicHeight": "AUTO_HEIGHT",
+  "dynamicTriggerPathList": [],
+  "fontFamily": "{{appsmith.theme.fontFamily.appFont}}",
+  "fontSize": "1rem",
+  "fontStyle": "BOLD",
+  "isLoading": false,
+  "isVisible": true,
+  "key": "7un2ruwjx9",
+  "leftColumn": 1,
+  "maxDynamicHeight": 9000,
+  "minDynamicHeight": 4,
+  "minWidth": 450,
+  "mobileBottomRow": 12,
+  "mobileLeftColumn": 12,
+  "mobileRightColumn": 28,
+  "mobileTopRow": 8,
+  "needsErrorInfo": false,
+  "originalBottomRow": 65,
+  "originalTopRow": 6,
+  "overflow": "NONE",
+  "parentColumnSpace": 12.53125,
+  "parentId": "8tjjb2gs7u",
+  "parentRowSpace": 10,
+  "renderMode": "CANVAS",
+  "responsiveBehavior": "fill",
+  "rightColumn": 23,
+  "shouldTruncate": false,
+  "text": "pk_card\nprimary key\nfk_card_condition_id_condition\nforeign key\nfk_card_expansion_id_expansion\nforeign key\nfk_card_language_id_language\nforeign key\nfk_card_rarity_id_rarity\nforeign key\n\n\ncard_id\nint4\ncard_name\nvarchar\ncard_number\nint4\nexpansion_max_number\nint4\nexpansion_id\nint4\nrarity_id\nint4\ncondition_id\nint4\nlanguage_id\nint4\nimage_path\nvarchar",
+  "textAlign": "LEFT",
+  "textColor": "#231F20",
+  "topRow": 6,
+  "truncateButtonColor": "{{appsmith.theme.colors.primaryColor}}",
+  "type": "TEXT_WIDGET",
+  "version": 1,
+  "widgetId": "sqfnwbowci",
+  "widgetName": "Text5"
+}
