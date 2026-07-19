@@ -1,2 +1,9 @@
 devcontainer-lock.json
 data/
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+.env*
+coverage/
