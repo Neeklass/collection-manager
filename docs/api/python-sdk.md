@@ -1,0 +1,173 @@
+# The Python SDK
+
+A fully typed Python SDK for the TCGdex API that lets you access Pokémon Trading Card Game data with both async and sync options.
+
+```python
+from tcgdexsdk import TCGdex, Extension
+
+# Init the SDK
+tcgdex = TCGdex()
+
+# Fetch a card in one line
+card = await tcgdex.card.get("swsh3-136")
+# Or use the sync version
+card = tcgdex.card.getSync("swsh3-136")
+
+print(f"Found: {card.name} ({card.localId}/{card.set.cardCount.total})")
+```
+
+## Installation and Basic Setup
+
+### 1. Install the SDK using pip:
+
+```python
+pip install tcgdex-sdk
+```
+
+### 2. Import and initialize:
+
+```python
+from tcgdexsdk import TCGdex, Language
+
+tcgdex = TCGdex() # Initialize with default language (English)
+
+# Initialize with language as string
+tcgdex = TCGdex("en")
+
+# Or using the Language enum
+tcgdex = TCGdex(Language.EN)
+```
+
+### 3. Start making requests:
+
+```python
+# Async usage
+card = await tcgdex.card.get("swsh3-136")
+
+# Sync usage
+card = tcgdex.card.getSync("swsh3-136")
+```
+
+## Key Features
+- Type Safety: All models are fully typed for better IDE integration
+- Dual API: Both asynchronous and synchronous interfaces
+- Flexible Querying: Powerful query builder to filter and sort results
+- Multi-Language Support: Access card data in multiple languages
+- Comprehensive Models: Detailed data models for cards, sets, series, and more
+- Image Access: Direct access to card images and set symbols
+
+## Endpoints
+
+The SDK provides specialized endpoints for different data types:
+
+```python
+sdk = TCGdex()
+
+# Base card endpoint
+sdk.card          # Full card information
+
+# Collection endpoints
+sdk.set            # Card sets (e.g., "Darkness Ablaze")
+sdk.serie          # Card series (e.g., "Sword & Shield")
+
+# Card data endpoints
+sdk.rarity        # Card rarities
+sdk.hp            # HP values
+sdk.illustrator   # Card illustrators
+
+# Game mechanics endpoints
+sdk.type          # Pokémon types
+sdk.energyType    # Energy types
+sdk.retreat       # Retreat costs
+sdk.stage         # Evolution stages
+
+# Card details endpoints
+sdk.variant        # Card variants (holo, reverse, etc.)
+sdk.suffix         # Card suffixes
+sdk.regulationMark # Regulation marks
+sdk.dexId          # Pokédex IDs
+```
+
+## Query Examples
+
+The SDK includes a powerful query builder to filter and sort results:
+
+```python
+from tcgdexsdk import TCGdex, Query
+
+sdk = TCGdex()
+
+# Find all cards with specific name
+furrets = await sdk.card.list(Query().equal("name", "Furret"))
+
+# Find cards with 'ban' in illustrator name (case-insensitive)
+ban_cards = await sdk.card.list(Query().contains("illustrator", "ban"))
+
+# Find high HP Pokémon, sorted by HP
+tanks = await sdk.card.list(
+    Query()
+        .greaterThan("hp", 200)
+        .sort("hp", "desc")
+)
+
+# Find cards with no attacks but with abilities
+basics = await sdk.card.list(
+    Query()
+        .isNull("attacks")
+        .notNull("abilities")
+)
+
+# Pagination support
+page2 = await sdk.card.list(
+    Query().paginate(page=2, itemsPerPage=20)
+)
+```
+
+## Language Support:
+
+The SDK supports multiple languages for card data:
+
+```python
+from tcgdexsdk import TCGdex, Language
+
+# Using string codes
+en_sdk = TCGdex("en")  # English
+fr_sdk = TCGdex("fr")  # French
+de_sdk = TCGdex("de")  # German
+
+# Using enum for type safety
+en_sdk = TCGdex(Language.EN) # default to english if not set
+
+# Change language on existing instance
+sdk = TCGdex()
+sdk.setLanguage(Language.FR)
+```
+
+## Working with Images
+
+Cards, sets, and series often include images that can be accessed:
+
+```python
+from tcgdexsdk.enums import Quality, Extension
+
+# Get a card
+card = await sdk.card.get("swsh3-136")
+
+# Get image URL with quality and format
+image_url = card.get_image_url(quality="high", extension="png")
+# Or using enums
+image_url = card.get_image_url(Quality.HIGH, Extension.PNG)
+
+# Download image directly
+image_data = card.get_image(Quality.HIGH, Extension.PNG)
+
+# Sets and series also have image methods
+set_data = await sdk.set.get("swsh3")
+
+logo_url = set_data.get_logo_url(Extension.PNG)
+logo = set_data.get_logo(Extension.PNG)
+
+symbol_url = set_data.get_symbol_url(Extension.WEBP)
+symbol = set_data.get_symbol(Extension.WEBP)
+```
+

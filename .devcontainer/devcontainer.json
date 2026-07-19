@@ -1,16 +1,24 @@
 {
     "name": "Python 3.14 Dev Container",
     "image": "mcr.microsoft.com/devcontainers/python:3.14",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "postCreateCommand": "gh extension install github/gh-copilot || true",
     "customizations": {
         "vscode": {
             "extensions": [
                 "GitHub.copilot",
+                "GitHub.copilot-chat",
                 "ms-python.python",
-                "ms-python.vscode-pylance"
+                "ms-python.vscode-pylance",
+                "ms-vscode.cpptools"
             ],
             "settings": {
                 "github.copilot.enable": true,
-                "github.copilot.editor.enable": true,
                 "python.defaultInterpreterPath": "/usr/local/bin/python3.14"
             }
         }

@@ -1,0 +1,190 @@
+Filtering, Sorting & Pagination
+
+Most endpoints that return arrays can have filters, sorting, and paginations informations added in the query to help you buid on them
+Filtering
+
+You can add filtering to the request you are making it will check if the field you are checking contains the defined string element or number
+
+It is constructed like so : object.key=value ex: name=pikachu
+Example
+
+Request:
+
+https://api.tcgdex.net/v2/en/cards?name=pikachu
+
+Response:
+
+[
+  {
+    "id": "basep-1",
+    "localId": "1",
+    "name": "Pikachu",
+    "image": "https://assets.tcgdex.net/en/base/basep/1"
+  },
+  // ...
+  {
+    "id": "xyp-XY95",
+    "localId": "XY95",
+    "name": "Pikachu",
+    "image": "https://assets.tcgdex.net/en/xy/xyp/XY95"
+  }
+]
+
+Prefixes
+
+To allow a more flexible way to use the API you can add differents prefixes to the filters to change how they work.
+
+TL:DR: the table below resume how it works
+Name	Prefix	Example	Expected output
+Laxist Equality Filter	, like:	name=fu, name=like:fu, name=fu*	Elements containing the value
+Laxist Not Equality Filter	not:, notlike:	name=not:fu	elements not containing the value
+Strict Equality Filter	eq:	name=eq:Furret	elements with the exact value
+Strict Different Filter	neq:	name=neq:Furret	Elements without the exact value
+Greater or Equal	gte:	hp=gte:50	Elements with more or equal than the value
+Lesser or Equal	lte:	hp=lte:50	Elements with less or equal than the value
+Greater than	gt:	hp=gt:50	Elements with more  than the value
+Lesser than	lt:	hp=lt:50	Elements with less than the value
+Is null	null:	effect=null:	Elements with no value
+Is not null	notnull:	effect=notnull:	Elements with a value
+Laxist Equality Filter , like:
+
+This is the default filter when doing a request, it does a laxist find in the specified field, meaning it search if the input is a part of the searched element, also it does this in a case insensitive maner.
+
+ex: name=abo or name=like:abo the name is composed of abo somewhere (can match Abomasnow or Pumpkaboo)
+
+If you add an asterisc at the start and/or end, for example name=*chu, it will check with the start/end of the text like *chu is equal to Pikachu but not Pikachu on the Ball likewise fu* is equal to Furret but not Stufful
+Laxist Not Equality Filter not:, notlike:
+
+You can reverse the previous filter by change the prefix to not: or notlike: it will find things that are not equal to it in the same way as above.
+Strict Equality Filter eq:
+
+Adding a secondary equal = to the request will search for the exact value instead of the default laxist matching
+
+?name=eq:abo
+
+Warning
+
+with this method you won’t match Charizard cards using charizard !
+Strict Not Equality Filter neq:
+
+do a strict equality check and remove the ones that match.
+
+ex: name=neq:abo the name MUST NOT be equal to abo
+Greater or Equal gte:
+
+for numbers only
+
+Allow you to get values that are greater or equal to the input
+
+ex: hp=gte:10
+Lesser or Equal lte:
+
+for numbers only
+
+Allow you to get values that are lesser or equal to the input
+
+hp=lte:10
+Greater than gt:
+
+for numbers only
+
+Allow you to get values that are greater or equal to the input
+
+ex: hp=gt:10
+Lesser than lt:
+
+for numbers only
+
+Allow you to get values that are lesser or equal to the input
+
+hp=lt:10
+is null null:
+
+ex: effect=null: the card has no effect
+
+make sur the : is set !
+is not null notnull:
+
+ex: effect=notnull: the card has an effect
+
+make sur the : is set !
+Multiple values |
+
+for some fields you can add multiple values to compare against.
+
+ex: name=eq:Furret|Pikachu, it will match both Pikachu and Furret
+Sorting
+
+Sorting is done by default in the API depending on the array returned releaseDate > localId > id
+
+You can override the default sorting algorithm by adding parameters to your request :
+query parameter	default value	possible values	description
+sort:field	releaseDate > localId > id	key of the object	change the field that is used to sort (MUST be the name of one of the field of the object)
+sort:order	ASC	ASC, DESC	change the ordering done on the field
+Example
+
+Request:
+
+https://api.tcgdex.net/v2/en/sets?sort:field=name&sort:order=DESC
+
+Response:
+
+[
+  {
+    "id": "sma",
+    "name": "Yellow A Alternate",
+    "symbol": "https://assets.tcgdex.net/univ/sm/sma/symbol",
+    "cardCount": {
+      "total": 94,
+      "official": 94
+    }
+  },
+  // ...
+  {
+    "id": "sv03.5",
+    "name": "151",
+    "logo": "https://assets.tcgdex.net/en/sv/sv03.5/logo",
+    "symbol": "https://assets.tcgdex.net/univ/sv/sv03.5/symbol",
+    "cardCount": {
+      "total": 207,
+      "official": 165
+    }
+  }
+]
+
+Pagination
+
+Pagination is not done automatically to speed requests on your end.
+
+you can still add it back by using the following query parameters:
+query parameter	default value	possible values	description
+pagination:page	1	Number	Indicate on which page you are at
+pagination:itemsPerPage	100 (when pagination:page is set)	Number	indicate the number of items displayed on each pages
+Example
+
+Request:
+
+https://api.tcgdex.net/v2/en/sets?pagination:page=3&pagination:itemsPerPage=2
+
+Response:
+
+[
+  {
+    "id": "base3",
+    "name": "Fossil",
+    "logo": "https://assets.tcgdex.net/en/base/base3/logo",
+    "symbol": "https://assets.tcgdex.net/univ/base/base3/symbol",
+    "cardCount": {
+      "total": 62,
+      "official": 62
+    }
+  },
+  {
+    "id": "jumbo",
+    "name": "Jumbo cards",
+    "cardCount": {
+      "total": 160,
+      "official": 160
+    }
+  }
+]

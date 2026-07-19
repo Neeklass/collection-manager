@@ -1,0 +1,39 @@
+
+Getting Started using the REST API
+
+The REST API is the main way of obtaining the Pokemon TCG information you search.
+Usage
+
+You can use the REST API multiple ways.
+
+    Using one of the SDKs
+    Querying directly one the API
+
+Everything is detailled in the documentation to allow you to do both.
+Try one of our SDKs
+Look at the API
+Information
+
+    The REST API returns predictable Objects defined under each request.
+    It is only available in HTTPS (HTTP requests are redirected to HTTPS)
+    Every request MUST be GET requests.
+    the API returns JSON responses in the body
+    We use standard HTTP response codes and every response possibles are indicated on each pages
+
+History
+V2
+
+The V2 of the API is the current one and was first enabled on January 2021.
+
+It currently Achieve more than 10 Millions requests per months.
+V1
+
+The V1 of the API was active from february 2020 to August 2021.
+
+It achived at it’s peak (february 2021) Around 200k requests per month.
+
+The V1 was deprecated in february 2021 and was completelly removed after 6 month in deprecation with :
+
+    All SDKs working with the v2
+    receiving less than 1k requests per month during the two previous months on it.
+
