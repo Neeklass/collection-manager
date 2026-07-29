@@ -109,7 +109,7 @@ module boundaries.
 
 **Estimated complexity:** M
 
-- [ ] **F06 - Implement shared domain value objects**
+- [x] **F06 - Implement shared domain value objects**
 
 **Goal:** Define reusable rules for identifiers, quantities, money, language,
 currency, and timestamps.
