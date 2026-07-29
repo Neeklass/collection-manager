@@ -129,7 +129,7 @@ currency, and timestamps.
 
 **Estimated complexity:** M
 
-- [ ] **F07 - Create the catalog persistence model**
+- [x] **F07 - Create the catalog persistence model**
 
 **Goal:** Persist catalog definitions independently from owned inventory.
 
