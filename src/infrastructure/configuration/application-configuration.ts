@@ -1,8 +1,14 @@
 import path from "node:path";
 
+import { createCurrency } from "@/domain/shared/currency";
+import { DomainValueError } from "@/domain/shared/domain-value-error";
+import { createLanguage } from "@/domain/shared/language";
+
 export const DEFAULT_DATA_DIRECTORY = ".data";
 export const DEFAULT_APPLICATION_URL = "http://127.0.0.1:3000";
 export const DEFAULT_LOG_LEVEL = "info";
+export const DEFAULT_LANGUAGE_CODE = "de-DE";
+export const DEFAULT_CURRENCY_CODE = "EUR";
 
 const DEFAULT_DATABASE_FILENAME = "collection-manager.sqlite";
 const LOG_LEVELS = ["debug", "info", "warn", "error"] as const;
@@ -14,6 +20,8 @@ export type ApplicationConfiguration = {
   readonly databasePath: string;
   readonly applicationUrl: string;
   readonly logLevel: LogLevel;
+  readonly defaultLanguageCode: string;
+  readonly defaultCurrencyCode: string;
 };
 
 export type ConfigurationEnvironment = Readonly<
@@ -105,6 +113,34 @@ function validateLogLevel(value: string): LogLevel {
   return value as LogLevel;
 }
 
+function validateDefaultLanguageCode(value: string): string {
+  try {
+    return createLanguage(value).code;
+  } catch (error: unknown) {
+    if (!(error instanceof DomainValueError)) {
+      throw error;
+    }
+
+    throw new ConfigurationError(
+      "COLLECTION_MANAGER_DEFAULT_LANGUAGE must be a valid BCP 47 language code.",
+    );
+  }
+}
+
+function validateDefaultCurrencyCode(value: string): string {
+  try {
+    return createCurrency(value).code;
+  } catch (error: unknown) {
+    if (!(error instanceof DomainValueError)) {
+      throw error;
+    }
+
+    throw new ConfigurationError(
+      "COLLECTION_MANAGER_DEFAULT_CURRENCY must be a supported ISO 4217 currency code.",
+    );
+  }
+}
+
 export function parseApplicationConfiguration(
   environment: ConfigurationEnvironment,
 ): ApplicationConfiguration {
@@ -131,12 +167,26 @@ export function parseApplicationConfiguration(
     readOptionalEnvironment(environment, "COLLECTION_MANAGER_LOG_LEVEL") ??
       DEFAULT_LOG_LEVEL,
   );
+  const defaultLanguageCode = validateDefaultLanguageCode(
+    readOptionalEnvironment(
+      environment,
+      "COLLECTION_MANAGER_DEFAULT_LANGUAGE",
+    ) ?? DEFAULT_LANGUAGE_CODE,
+  );
+  const defaultCurrencyCode = validateDefaultCurrencyCode(
+    readOptionalEnvironment(
+      environment,
+      "COLLECTION_MANAGER_DEFAULT_CURRENCY",
+    ) ?? DEFAULT_CURRENCY_CODE,
+  );
 
   return Object.freeze({
     dataDirectory,
     databasePath,
     applicationUrl,
     logLevel,
+    defaultLanguageCode,
+    defaultCurrencyCode,
   });
 }
 

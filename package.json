@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "db:migrate": "tsx scripts/migrate-database.ts",
+    "db:bootstrap": "tsx scripts/bootstrap-database.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"scripts/**/*.ts\" \"*.{json,mjs,ts}\" \"tests/**/*.{ts,tsx}\" README.md",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"scripts/**/*.ts\" \"*.{json,mjs,ts}\" \"tests/**/*.{ts,tsx}\" README.md",
     "lint": "eslint",

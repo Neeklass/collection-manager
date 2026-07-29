@@ -12,6 +12,8 @@ describe("application configuration", () => {
       databasePath: ".data/collection-manager.sqlite",
       applicationUrl: "http://127.0.0.1:3000",
       logLevel: "info",
+      defaultLanguageCode: "de-DE",
+      defaultCurrencyCode: "EUR",
     });
   });
 
@@ -22,12 +24,16 @@ describe("application configuration", () => {
         COLLECTION_MANAGER_DATABASE_PATH: "var/data/app.sqlite",
         COLLECTION_MANAGER_APP_URL: "http://localhost:4000/",
         COLLECTION_MANAGER_LOG_LEVEL: "debug",
+        COLLECTION_MANAGER_DEFAULT_LANGUAGE: "en-us",
+        COLLECTION_MANAGER_DEFAULT_CURRENCY: "usd",
       }),
     ).toEqual({
       dataDirectory: "var/data",
       databasePath: "var/data/app.sqlite",
       applicationUrl: "http://localhost:4000",
       logLevel: "debug",
+      defaultLanguageCode: "en-US",
+      defaultCurrencyCode: "USD",
     });
   });
 
@@ -97,4 +103,29 @@ describe("application configuration", () => {
       "COLLECTION_MANAGER_LOG_LEVEL must be one of: debug, info, warn, error.",
     );
   });
+
+  it.each([
+    [
+      "COLLECTION_MANAGER_DEFAULT_LANGUAGE",
+      "private_language_value",
+      "COLLECTION_MANAGER_DEFAULT_LANGUAGE must be a valid BCP 47 language code.",
+    ],
+    [
+      "COLLECTION_MANAGER_DEFAULT_CURRENCY",
+      "ZZZ",
+      "COLLECTION_MANAGER_DEFAULT_CURRENCY must be a supported ISO 4217 currency code.",
+    ],
+  ])(
+    "rejects invalid %s without exposing its value",
+    (name, value, expectedMessage) => {
+      try {
+        parseApplicationConfiguration({ [name]: value });
+        expect.fail("Expected configuration parsing to fail.");
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(ConfigurationError);
+        expect((error as Error).message).toBe(expectedMessage);
+        expect((error as Error).message).not.toContain(value);
+      }
+    },
+  );
 });

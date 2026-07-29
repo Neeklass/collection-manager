@@ -171,7 +171,7 @@ metadata.
 
 **Estimated complexity:** M
 
-- [ ] **F09 - Seed the default local collection**
+- [x] **F09 - Seed the default local collection**
 
 **Goal:** Make a new installation immediately usable without authentication.
 
