@@ -151,7 +151,7 @@ currency, and timestamps.
 
 **Estimated complexity:** M
 
-- [ ] **F08 - Create the collection persistence model**
+- [x] **F08 - Create the collection persistence model**
 
 **Goal:** Persist owned homogeneous lots without coupling ownership to catalog
 metadata.

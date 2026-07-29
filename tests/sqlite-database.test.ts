@@ -124,8 +124,8 @@ describe("SQLite migrations", () => {
     const database = trackDatabase(openSqliteDatabase(configuration));
 
     expect(migrateDatabase(database)).toEqual({
-      appliedVersions: [1, 2],
-      currentVersion: 2,
+      appliedVersions: [1, 2, 3],
+      currentVersion: 3,
     });
 
     const history = database
@@ -136,10 +136,10 @@ describe("SQLite migrations", () => {
           WHERE version = ?
         `,
       )
-      .get(2);
+      .get(3);
 
     expect(history).toEqual({
-      name: "catalog-persistence",
+      name: "collection-persistence",
       checksum: expect.stringMatching(/^[a-f0-9]{64}$/),
     });
 
@@ -176,7 +176,7 @@ describe("SQLite migrations", () => {
 
     expect(migrateDatabase(database)).toEqual({
       appliedVersions: [],
-      currentVersion: 2,
+      currentVersion: 3,
     });
   });
 
@@ -233,7 +233,7 @@ describe("SQLite migrations", () => {
     const configuration = await createDatabaseConfiguration();
     const database = trackDatabase(openSqliteDatabase(configuration));
     const failingMigration: SqliteMigration = {
-      version: 3,
+      version: 4,
       name: "failing-test-migration",
       sql: `
         CREATE TABLE table_that_must_be_rolled_back (id INTEGER PRIMARY KEY);
@@ -244,7 +244,7 @@ describe("SQLite migrations", () => {
     expect(() =>
       migrateDatabase(database, [...sqliteMigrations, failingMigration]),
     ).toThrowError(
-      "Migration version 3 could not be applied. Its database changes were rolled back.",
+      "Migration version 4 could not be applied. Its database changes were rolled back.",
     );
 
     expect(
@@ -263,7 +263,7 @@ describe("SQLite migrations", () => {
         .prepare<[number], CountRow>(
           "SELECT count(*) AS count FROM schema_migrations WHERE version = ?",
         )
-        .get(3),
+        .get(4),
     ).toEqual({ count: 0 });
   });
 });
