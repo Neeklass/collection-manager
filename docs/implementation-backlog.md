@@ -90,7 +90,7 @@ module boundaries.
 
 **Estimated complexity:** S
 
-- [ ] **F05 - Integrate SQLite and migration tooling**
+- [x] **F05 - Integrate SQLite and migration tooling**
 
 **Goal:** Provide reliable local persistence through versioned migrations.
 
