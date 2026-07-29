@@ -48,6 +48,29 @@ function validatePath(value: string, name: string): string {
   return value;
 }
 
+function validateDatabasePath(
+  dataDirectory: string,
+  databasePath: string,
+): string {
+  const relativeDatabasePath = path.relative(
+    path.resolve(dataDirectory),
+    path.resolve(databasePath),
+  );
+  const isOutsideDataDirectory =
+    relativeDatabasePath === "" ||
+    relativeDatabasePath === ".." ||
+    relativeDatabasePath.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativeDatabasePath);
+
+  if (isOutsideDataDirectory) {
+    throw new ConfigurationError(
+      "COLLECTION_MANAGER_DATABASE_PATH must be located beneath COLLECTION_MANAGER_DATA_DIRECTORY.",
+    );
+  }
+
+  return databasePath;
+}
+
 function validateApplicationUrl(value: string): string {
   let url: URL;
 
@@ -90,10 +113,15 @@ export function parseApplicationConfiguration(
       DEFAULT_DATA_DIRECTORY,
     "COLLECTION_MANAGER_DATA_DIRECTORY",
   );
-  const databasePath = validatePath(
-    readOptionalEnvironment(environment, "COLLECTION_MANAGER_DATABASE_PATH") ??
-      path.join(dataDirectory, DEFAULT_DATABASE_FILENAME),
-    "COLLECTION_MANAGER_DATABASE_PATH",
+  const databasePath = validateDatabasePath(
+    dataDirectory,
+    validatePath(
+      readOptionalEnvironment(
+        environment,
+        "COLLECTION_MANAGER_DATABASE_PATH",
+      ) ?? path.join(dataDirectory, DEFAULT_DATABASE_FILENAME),
+      "COLLECTION_MANAGER_DATABASE_PATH",
+    ),
   );
   const applicationUrl = validateApplicationUrl(
     readOptionalEnvironment(environment, "COLLECTION_MANAGER_APP_URL") ??

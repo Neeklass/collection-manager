@@ -18,3 +18,12 @@ Configuration is read from environment variables. Safe localhost defaults keep
 application data in `.data/` and use the SQLite database
 `.data/collection-manager.sqlite`. Copy `.env.example` to `.env.local` to
 customize the data directory, database path, application URL, or log level.
+
+The database path must remain beneath the configured local data directory.
+Create or upgrade the local SQLite database explicitly with:
+
+```sh
+npm run db:migrate
+```
+
+Migrations are applied sequentially and recorded in `schema_migrations`.

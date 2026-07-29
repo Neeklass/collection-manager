@@ -31,6 +31,44 @@ describe("application configuration", () => {
     });
   });
 
+  it("allows a database in a nested directory beneath the data directory", () => {
+    expect(
+      parseApplicationConfiguration({
+        COLLECTION_MANAGER_DATA_DIRECTORY: "var/data",
+        COLLECTION_MANAGER_DATABASE_PATH: "var/data/databases/app.sqlite",
+      }).databasePath,
+    ).toBe("var/data/databases/app.sqlite");
+  });
+
+  it.each([["../outside.sqlite"], [".data-other/outside.sqlite"], [".data"]])(
+    "rejects a database path outside the local data directory",
+    (value) => {
+      expect(() =>
+        parseApplicationConfiguration({
+          COLLECTION_MANAGER_DATA_DIRECTORY: ".data",
+          COLLECTION_MANAGER_DATABASE_PATH: value,
+        }),
+      ).toThrowError(
+        "COLLECTION_MANAGER_DATABASE_PATH must be located beneath COLLECTION_MANAGER_DATA_DIRECTORY.",
+      );
+    },
+  );
+
+  it("does not expose a rejected database path", () => {
+    const unsafePath = "../private/customer-name.sqlite";
+
+    try {
+      parseApplicationConfiguration({
+        COLLECTION_MANAGER_DATA_DIRECTORY: ".data",
+        COLLECTION_MANAGER_DATABASE_PATH: unsafePath,
+      });
+      expect.fail("Expected configuration parsing to fail.");
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(ConfigurationError);
+      expect((error as Error).message).not.toContain(unsafePath);
+    }
+  });
+
   it.each([
     ["COLLECTION_MANAGER_DATA_DIRECTORY", "\0data"],
     ["COLLECTION_MANAGER_DATABASE_PATH", "db\n.sqlite"],
