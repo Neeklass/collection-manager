@@ -71,7 +71,7 @@ module boundaries.
 
 **Estimated complexity:** S
 
-- [ ] **F04 - Add validated local configuration**
+- [x] **F04 - Add validated local configuration**
 
 **Goal:** Centralize environment-based configuration with secure local defaults.
 
